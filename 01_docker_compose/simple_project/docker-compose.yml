@@ -1,17 +1,54 @@
-version: '3'
+version: '3.8'
 services:
-  service:
+
+  backend:
     build: ./app
+    container_name: backend
+    env_file: ./app/config/.env
     expose:
       - "8000"
+    networks:
+      - etube
+    healthcheck:
+      test: curl http://backend:8000 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   nginx:
     image: nginx:latest
+    container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
       - ./data:/data/:ro
     depends_on:
-      - service
+      backend:
+        condition: service_healthy
+      db: 
+        condition: service_healthy
     ports:
       - "80:80"
+    networks:
+      - etube
+
+  db:
+    image: postgres:13
+    container_name: db
+    env_file: ./app/config/.env
+    healthcheck:
+      test: pg_isready -U ${DB_USER} -D ${DB_NAME} > /dev/null; if [[ $$? == 0 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - etube
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - ./db/postgres-data:/var/lib/postgresql/data
+
+networks:
+  etube:
+    driver: bridge
