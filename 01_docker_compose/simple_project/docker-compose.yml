@@ -4,7 +4,11 @@ services:
   backend:
     build: ./app
     container_name: backend
-    env_file: ./app/config/.env
+    env_file: 
+      - .env
+      - ./app/config/.env
+    volumes:
+      - ./app:/opt/app
     expose:
       - "8000"
     networks:
@@ -35,7 +39,11 @@ services:
   db:
     image: postgres:13
     container_name: db
-    env_file: ./app/config/.env
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     healthcheck:
       test: pg_isready -U ${DB_USER} -D ${DB_NAME} > /dev/null; if [[ $$? == 0 ]]; then echo 0; else echo 1; fi
       interval: 30s
@@ -47,8 +55,11 @@ services:
       - 5432:5432
     restart: unless-stopped
     volumes:
-      - ./db/postgres-data:/var/lib/postgresql/data
+      - etube-postgres-data:/var/lib/postgresql/data
 
 networks:
   etube:
     driver: bridge
+
+volumes:
+  etube-postgres-data:
