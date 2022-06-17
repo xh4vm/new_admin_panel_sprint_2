@@ -1,8 +1,7 @@
+import logging
+
 from dotenv import load_dotenv
-
 from split_settings.tools import include
-import  logging
-
 
 load_dotenv()
 
