@@ -133,4 +133,3 @@ dmypy.json
 .python-version
 .env
 postgres-data/
-static/
