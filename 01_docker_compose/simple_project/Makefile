@@ -22,6 +22,10 @@ rund:
 cli:
 	docker exec -it backend bash
 
+.PHONY: cli nginx
+cli-nginx:
+	docker exec -it nginx bash
+
 .PHONY: clean-pyc
 clean-pyc:
 	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete

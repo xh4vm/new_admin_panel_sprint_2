@@ -24,7 +24,9 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
-      - ./data:/data/:ro
+      - ./static/data:/data/:ro
+      - ./static/errors:/var/www/errors/:ro
+      - ./static/django:/var/www/django/static/:ro
     depends_on:
       backend:
         condition: service_healthy
