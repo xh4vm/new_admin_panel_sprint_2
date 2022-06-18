@@ -6,7 +6,6 @@ services:
     container_name: backend
     env_file: 
       - .env
-      - ./app/config/.env
     volumes:
       - ./app:/opt/app
     expose:

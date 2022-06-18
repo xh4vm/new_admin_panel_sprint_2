@@ -1,3 +1,7 @@
+.PHONY: run pre-commit all files
+pre-commit:
+	pre-commit run --all-files
+
 .PHONY: interactive build services
 build:
 	docker compose up --build
@@ -13,6 +17,10 @@ buildd:
 .PHONY: daemon run services
 rund:
 	docker compose up -d
+
+.PHONY: backend cli
+cli:
+	docker exec -it backend bash
 
 .PHONY: clean-pyc
 clean-pyc:
