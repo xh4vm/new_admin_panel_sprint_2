@@ -1,5 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpRequest, JsonResponse
+from django.views import View
 
 
-def api(request):
-    return HttpResponse("My best API")
+class MoviesListApi(View):
+    http_method_names: list[str] = ('get', )
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return JsonResponse({})

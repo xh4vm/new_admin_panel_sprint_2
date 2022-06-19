@@ -1,6 +1,7 @@
 from django.urls import path
-from movies.api.v1 import views
+
+from .views import MoviesListApi
 
 urlpatterns = [
-    path('movies/', views.api),
+    path('movies/', MoviesListApi.as_view()),
 ]
