@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+
+  backend:
+    build: ./app
+    container_name: backend
+    env_file: 
+      - .env
+    volumes:
+      - ./app:/opt/app
+    ports:
+      - 8000:8000
+    networks:
+      - etube
+    healthcheck:
+      test: curl http://backend:8000 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  db:
+    image: postgres:13
+    container_name: db
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    healthcheck:
+      test: pg_isready -U ${DB_USER} -D ${DB_NAME} > /dev/null; if [[ $$? == 0 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - etube
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - etube-postgres-data:/var/lib/postgresql/data
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger
+    environment:
+      - SWAGGER_JSON=/swagger.yaml
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./openapi.yaml:/swagger.yaml:ro
+    networks:
+      - etube
+    ports:
+      - 8080:8080
+
+
+networks:
+  etube:
+    driver: bridge
+  
+volumes:
+  etube-postgres-data:
