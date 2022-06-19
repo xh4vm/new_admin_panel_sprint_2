@@ -6,7 +6,6 @@ services:
     container_name: backend
     env_file: 
       - .env
-      - ./app/config/.env
     volumes:
       - ./app:/opt/app
     expose:
@@ -25,7 +24,11 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
-      - ./data:/data/:ro
+      - ./static/data:/data/:ro
+      - ./static/errors:/var/www/errors/:ro
+      - ./static/django:/var/www/django/static/:ro
+      - ./static/log/access.log:/var/log/nginx/access.log:rw
+      - ./static/log/error.log:/var/log/nginx/error.log:rw
     depends_on:
       backend:
         condition: service_healthy
