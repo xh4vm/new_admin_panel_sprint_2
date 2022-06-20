@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'movies.apps.MoviesConfig',
     'debug_toolbar',
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -81,9 +82,7 @@ LOGGING = {
     'formatters': {'default': {'format': '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'}},
     'handlers': {
         'debug-console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'default',
-            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler', 'formatter': 'default', 'filters': ['require_debug_true'],
         },
     },
     'loggers': {'django.db.backends': {'level': 'DEBUG', 'handlers': ['debug-console'], 'propagate': False, }},
