@@ -10,6 +10,7 @@ DEBUG = os.environ.get('DEBUG', False) == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -19,7 +20,6 @@ INSTALLED_APPS = [
     'movies.apps.MoviesConfig',
     'debug_toolbar',
     'corsheaders',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -97,3 +97,6 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 }
+
+
+APPEND_SLASH = False

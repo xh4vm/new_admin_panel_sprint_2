@@ -8,6 +8,7 @@ services:
       - .env
     volumes:
       - ./app:/opt/app
+      - ./static:/var/www/static:ro
     ports:
       - 8000:8000
     networks:

@@ -1,5 +1,11 @@
-from django.urls import path
+from config.routers import OptionalSlashRouter
+from django.urls import include, path
 
-from .views import MoviesDetailApi, MoviesListApi
+from .views import MoviesApi
 
-urlpatterns = [path('movies/', MoviesListApi.as_view()), path('movies/<uuid:pk>/', MoviesDetailApi.as_view())]
+router = OptionalSlashRouter()
+router.register('movies', MoviesApi, basename='movies')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
