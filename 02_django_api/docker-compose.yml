@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+
+  backend:
+    build: ./app
+    container_name: backend
+    env_file: 
+      - .env
+    volumes:
+      - ./app:/opt/app
+      - ./static:/var/www/static:ro
+    ports:
+      - 8000:8000
+    networks:
+      - etube
+
+  db:
+    image: postgres:13
+    container_name: db
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    networks:
+      - etube
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - etube-postgres-data:/var/lib/postgresql/data
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger
+    environment:
+      - SWAGGER_JSON=/swagger.yaml
+    volumes:
+      - ./openapi.yaml:/swagger.yaml:ro
+    networks:
+      - etube
+    ports:
+      - 8080:8080
+
+
+networks:
+  etube:
+    driver: bridge
+  
+volumes:
+  etube-postgres-data:
